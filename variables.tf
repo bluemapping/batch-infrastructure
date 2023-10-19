@@ -22,3 +22,9 @@ variable "service" {
   nullable    = false
   description = "The name of the service that will be run on the environment"
 }
+
+variable "private_subnets_ids" {
+  type        = list(string)
+  nullable    = false
+  description = "The ids of the project vpc private subnets where the compute environments are hosted"
+}
