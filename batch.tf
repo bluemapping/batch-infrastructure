@@ -48,7 +48,7 @@ resource "aws_batch_job_definition" "simulation_edge_small" {
       },
       {
         type  = "MEMORY"
-        value = "512"
+        value = "2048"
       },
       #      {
       #        type  = "GPU"
@@ -82,8 +82,4 @@ resource "aws_batch_job_queue" "edge_queue" {
   compute_environments = [
     aws_batch_compute_environment.small.arn,
   ]
-}
-
-resource "aws_batch_scheduling_policy" "edge_scheduling_policy" {
-  name = "edge-scheduling-policy"
 }

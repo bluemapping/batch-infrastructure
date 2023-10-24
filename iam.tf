@@ -61,9 +61,12 @@ resource "aws_iam_policy" "batch_cloudwatch_logs_policy" {
         Action = [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams"
         ],
-        Resource = "*"
+        "Resource" : [
+          "arn:aws:logs:*:*:*"
+        ]
       }
     ]
   })
@@ -71,5 +74,5 @@ resource "aws_iam_policy" "batch_cloudwatch_logs_policy" {
 
 resource "aws_iam_role_policy_attachment" "batch_cloudwatch_logs_attachment" {
   policy_arn = aws_iam_policy.batch_cloudwatch_logs_policy.arn
-  role       = aws_iam_role.aws_batch_service_role.name
+  role       = aws_iam_role.ecs_compute_instance_role.name
 }
