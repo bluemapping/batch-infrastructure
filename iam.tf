@@ -48,3 +48,28 @@ resource "aws_iam_role_policy_attachment" "aws_batch_service_role" {
   role       = aws_iam_role.aws_batch_service_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole"
 }
+
+resource "aws_iam_policy" "batch_cloudwatch_logs_policy" {
+  name        = "BatchCloudWatchLogsPolicy"
+  description = "Policy that allows AWS Batch to interact with CloudWatch Logs"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "batch_cloudwatch_logs_attachment" {
+  policy_arn = aws_iam_policy.batch_cloudwatch_logs_policy.arn
+  role       = aws_iam_role.aws_batch_service_role.name
+}
