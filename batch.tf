@@ -25,10 +25,6 @@ resource "aws_batch_compute_environment" "small" {
     type = "EC2"
   }
 
-  settings = {
-    containerInsights = "ENABLED"
-  }
-
   service_role = aws_iam_role.aws_batch_service_role.arn
   type         = "MANAGED"
   state        = "ENABLED"
