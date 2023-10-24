@@ -83,3 +83,7 @@ resource "aws_batch_job_queue" "edge_queue" {
     aws_batch_compute_environment.small.arn,
   ]
 }
+
+resource "aws_batch_scheduling_policy" "edge_scheduling_policy" {
+  name = "edge-scheduling-policy"
+}
