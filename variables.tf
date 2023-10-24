@@ -28,3 +28,9 @@ variable "private_subnets_ids" {
   nullable    = false
   description = "The ids of the project vpc private subnets where the compute environments are hosted"
 }
+
+variable "compute_image_most_recent" {
+  type        = string
+  nullable    = false
+  description = "The latest compute image released on the ECR repository"
+}
