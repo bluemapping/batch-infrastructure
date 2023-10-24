@@ -1,5 +1,5 @@
-resource "aws_batch_compute_environment" "edge" {
-  compute_environment_name = "Edge"
+resource "aws_batch_compute_environment" "small" {
+  compute_environment_name_prefix = "small_"
 
   compute_resources {
     ec2_configuration {
@@ -31,4 +31,55 @@ resource "aws_batch_compute_environment" "edge" {
   depends_on   = [aws_iam_role_policy_attachment.aws_batch_service_role]
 
   tags = local.tags
+}
+
+resource "aws_batch_job_definition" "simulation_edge_small" {
+  name                  = "simulation_job_edge"
+  type                  = "container"
+  platform_capabilities = "EC2"
+
+  container_properties = jsonencode({
+    image : var.compute_image_most_recent
+
+    resourceRequirements = [
+      {
+        type  = "VCPU"
+        value = "1"
+      },
+      {
+        type  = "MEMORY"
+        value = "512"
+      },
+      #      {
+      #        type  = "GPU"
+      #        value = "1"
+      #      }
+    ]
+
+    logConfiguration : {
+      logDriver : "awslogs",
+      options : {
+        awslogs-create-group : "true",
+        awslogs-group : "/batch/${var.project}",
+        awslogs-region : "us-east-1",
+        awslogs-stream-prefix : "batch"
+      }
+    }
+
+    environment = [
+      {
+        name  = "VARNAME"
+        value = "VARVAL"
+      }
+    ]
+  })
+}
+
+resource "aws_batch_job_queue" "edge_queue" {
+  name     = "edge-queue"
+  state    = "ENABLED"
+  priority = 1
+  compute_environments = [
+    aws_batch_compute_environment.small.arn,
+  ]
 }
